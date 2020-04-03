@@ -1,5 +1,10 @@
 import React from "react";
-import Plot from "react-plotly.js";
+import _ from 'lodash';
+
+//import Plot from "react-plotly.js";
+import Plotly from 'plotly.js-basic-dist';
+import createPlotlyComponent from 'react-plotly.js/factory';
+const Plot = createPlotlyComponent(Plotly);
 
 class Stock extends React.Component {
   constructor(props) {
@@ -9,17 +14,19 @@ class Stock extends React.Component {
       stockChartYValues: [],
       
     };
+    this.fetchStock = this.fetchStock.bind(this)
   }
 
-  componentDidMount() {
-    this.fetchStock();
+ componentDidMount() {
+   this.fetchStock();
   }
 
   fetchStock() {
     const pointerToThis = this;
     console.log(pointerToThis);
     const API_KEY = "VY6AH13MRIO266VC";
-    let StockSymbol = this.props.stockSym;
+    let StockSymbol = this.props.stockSymbol;
+    console.log(StockSymbol);
     let API_Call = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${StockSymbol}&outputsize=compact&apikey=${API_KEY}`;
     let stockChartXValuesFunction = [];
     let stockChartYValuesFunction = [];
@@ -41,7 +48,7 @@ class Stock extends React.Component {
         // console.log(stockChartXValuesFunction);
         pointerToThis.setState({
           stockChartXValues: stockChartXValuesFunction,
-          stockChartYValues: stockChartYValuesFunction
+          stockChartYValues: stockChartYValuesFunction,
         });
       });
   }
@@ -60,7 +67,7 @@ class Stock extends React.Component {
               marker: { color: "red" }
             }
           ]}
-          layout={{ width: 720, height: 440, title: "Facebook stock" }}
+          layout={{ width: 720, height: 400, title: this.props.stockSymbol }}
         />
       </div>
     );

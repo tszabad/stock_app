@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {connect} from "react-redux";
 import {createStock} from '../../store/actions/projectActions'
+import { Redirect } from 'react-router-dom'
 
 class CreateStock extends Component {
   state = {
@@ -15,8 +16,11 @@ class CreateStock extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.createStock(this.state);
+    this.props.history.push('/');
   }
   render() {
+    const { auth } = this.props;
+    if (!auth.uid) return <Redirect to='/signin' /> 
     return (
       <div className="container">
         <form className="white" onSubmit={this.handleSubmit}>
@@ -38,11 +42,17 @@ class CreateStock extends Component {
   }
 }
 
-const mapStateToProps = (dispatch) =>{
+const mapStateToProps = (state) => {
+  return {
+    auth: state.firebase.auth
+  }
+}
+
+const mapDispatchToProps = (dispatch) =>{
   return{
     createStock: (stock) =>dispatch(createStock(stock))
 
   }
 }
 
-export default connect(null,mapStateToProps)(CreateStock)
+export default connect(mapStateToProps, mapDispatchToProps)(CreateStock)
