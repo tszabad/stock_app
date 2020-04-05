@@ -7,19 +7,44 @@ import { compose } from 'redux'
 import { Redirect } from 'react-router-dom'
 
 class Dashboard extends Component {
+
+  constructor(props){
+    super(props);
+  
+    this.state = this.props;
+    this.handleDelete=this.handleDelete.bind(this);
+    
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (prevState !== nextProps ) {
+      return { stocks: nextProps.stocks };
+    }
+    else{ 
+      return null;
+    }
+  }
+  handleDelete(id){
+    this.props.deleteStock(id);
+    console.log(id);
+    this.props.history.push('/');
+  }
+
+
+
   render() {
     
-    const { stocks, auth } = this.props;
+    const { stocks, auth, notifications } = this.props;
     if (!auth.uid) return <Redirect to='/signin' /> 
     
     return (
       <div className="dashboard container">
         <div className="row">
-          <div className="col s12 m6">
-            <ProjectList stocks={stocks} />
+          <div className="col s12 m8">
+            <ProjectList stocks={this.state.stocks} handleDelete={this.handleDelete.bind(this)} />
           </div>
-          <div className="col s12 m5 offset-m1">
-            <Notifications />
+          <div className="col s12 m3 offset-m1">
+            <Notifications notifications={notifications}/>
           </div>
         </div>
       </div>
@@ -30,13 +55,23 @@ class Dashboard extends Component {
 const mapStateToProps = (state) => {
   return {
     stocks: state.firestore.ordered.stocks,
-    auth: state.firebase.auth
+    auth: state.firebase.auth,
+    notifications: state.firestore.ordered.notifications
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  
+  return {
+    
+    deleteProject: (id) => dispatch(deleteStock(id))
   }
 }
 
 export default compose(
-  connect(mapStateToProps),
+  connect(mapStateToProps, mapDispatchToProps),
   firestoreConnect([
-    { collection: 'stocks' }
+    { collection: 'stocks', orderBy: ['createdAt', 'desc'] },
+    { collection: 'notifications', limit: 5, orderBy: ['time', 'desc']}
   ])
 )(Dashboard)

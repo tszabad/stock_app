@@ -1,4 +1,7 @@
 import React, {useState, useEffect} from 'react'
+import moment from 'moment'
+import { Link } from 'react-router-dom'
+
 
 
 const ProjectSummary = ({stock}) => {
@@ -11,7 +14,7 @@ const ProjectSummary = ({stock}) => {
   const fetchStock = () => {
     const API_KEY = "VY6AH13MRIO266VC";
     let StockSymbol = stock.stockSymbol;
-    console.log(StockSymbol);
+    
     let API_Call = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=${StockSymbol}&outputsize=compact&apikey=${API_KEY}`;
     
 
@@ -20,9 +23,9 @@ const ProjectSummary = ({stock}) => {
         return response.json();
       })
       .then(function(data) {
-        console.log(data);
-        const lastRefreshed = data['Meta Data']['3. Last Refreshed'].slice(0, 10);
-        console.log(lastRefreshed)
+        console.log(data)
+        const lastRefreshed = data['Meta Data']['3. Last Refreshed'];
+      
         setPrice(data["Time Series (Daily)"][lastRefreshed]["1. open"]) 
       });
     }
@@ -35,7 +38,10 @@ const ProjectSummary = ({stock}) => {
         <span className="card-title ">{stock.stockName}</span>
         <span className="card-body Heading h3">{Number(price).toFixed(2)} USD</span>
         <p className="grey-text Heading h6">{stock.authorFirstName} {stock.authorLastName}</p>
-        <p className="grey-text Heading h6">3rd September, 2am</p>
+        <p className="grey-text Heading h6">{moment(stock.createdAt.toDate()).calendar()}</p>
+        <Link className='secondary-content' to="/" onClick={()=>props.handleDelete(stock.id)}>
+              <i className=' material-icons' style={{color:"red"}}>delete</i>
+        </Link>
       </div>
     </div>
     </div>

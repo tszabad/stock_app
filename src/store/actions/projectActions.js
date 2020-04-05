@@ -17,3 +17,18 @@ export const createStock = (stock) => {
     });
   }
 };
+
+export const deleteStock = (id) => {
+ 
+  return (dispatch, getState, {getFirestore}) => {
+    const firestore = getFirestore();
+    firestore.collection('stocks').doc(id).delete().then(() => {
+      dispatch({ type: 'DELETE_STOCK_SUCCESS' });
+    }).catch(err => {
+      dispatch({ type: 'DELETE_STOCK_ERROR' }, err);
+    });
+    
+    
+  }
+  
+};
