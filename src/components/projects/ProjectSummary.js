@@ -4,14 +4,18 @@ import { Link } from 'react-router-dom'
 
 
 
-const ProjectSummary = ({stock}) => {
+const ProjectSummary = ( props) => {
+  const {stock} = props;
+  
+
   const[price, setPrice] =  useState(null)
+  
 
   useEffect(() => {
     fetchStock();
   }, []);
 
-  const fetchStock = () => {
+  const fetchStock = async () => {
     const API_KEY = "VY6AH13MRIO266VC";
     let StockSymbol = stock.stockSymbol;
     
@@ -22,11 +26,10 @@ const ProjectSummary = ({stock}) => {
       .then(function(response) {
         return response.json();
       })
-      .then(function(data) {
-        console.log(data)
-        const lastRefreshed = data['Meta Data']['3. Last Refreshed'];
-      
-        setPrice(data["Time Series (Daily)"][lastRefreshed]["1. open"]) 
+      .then( await function(data) {
+        console.log(data);
+        const lastrefreshed = data["Meta Data"]["3. Last Refreshed"].slice(0, 10);
+        setPrice(data["Time Series (Daily)"][lastrefreshed]["1. open"]) 
       });
     }
 

@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { firestoreConnect } from 'react-redux-firebase'
 import { compose } from 'redux'
 import { Redirect } from 'react-router-dom'
+import { deleteStock } from '../../store/actions/projectActions'
 
 class Dashboard extends Component {
 
@@ -64,7 +65,7 @@ const mapDispatchToProps = (dispatch) => {
   
   return {
     
-    deleteProject: (id) => dispatch(deleteStock(id))
+    deleteStock: (id) => dispatch(deleteStock(id))
   }
 }
 
