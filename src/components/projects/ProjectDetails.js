@@ -22,16 +22,16 @@ const ProjectDetails = (props) => {
     <div className="card z-depth-0">
           <div className="card-content">
             <span className="card-title">{stock.stockName}</span>
-            <p>{stock.stockSymbol}</p>
+            <p>{stock.stockSymbol}</p><Link className='primary-content' to='/'  >
+            <i className="material-icons" style={{color:"#44a6c6"}}>arrow_back</i>
+            </Link>
           </div>
           <Stock stockSymbol = {stock.stockSymbol}></Stock>
           
           <div className="card-action grey lighten-4 grey-text">
             <div>Posted by {stock.authorFirstName} {stock.authorLastName}</div>
             <div>{moment(stock.createdAt.toDate()).calendar()}</div>
-            <Link className='secondary-content' to='/'  >
-            <i className="material-icons" style={{color:"#44a6c6"}}>arrow_back</i>
-            </Link>
+            
           </div>
         </div>
     </div>
